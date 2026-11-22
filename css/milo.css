@@ -73,6 +73,11 @@
 .cover-contain img,.prose img.milo-screenshot{outline:1px solid var(--line);outline-offset:-1px;border-radius:12px}
 .prose img.milo-screenshot{box-shadow:0 2px 8px #0000000a}
 
+.post-list .pager{justify-content:center;gap:6px 8px;margin-top:28px}
+.post-list .pager :is(a,span){display:inline-flex;align-items:center;justify-content:center;min-width:40px;min-height:44px;padding:5px 8px;border-radius:8px}
+.post-list .pager a:hover,.post-list .pager a:focus-visible,.post-list .pager .current{color:var(--accent);background:var(--accent-soft)}
+.post-list .pager .current{font-weight:600}
+
 /* Shared DOM order: metadata, title, cover, excerpt. */
 .entry-copy.has-cover{display:grid;grid-template-columns:minmax(0,1fr) 30%;grid-template-rows:min-content min-content 1fr;column-gap:28px}
 .entry-copy.has-cover>:not(.cover){grid-column:1}

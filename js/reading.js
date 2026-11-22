@@ -68,7 +68,9 @@
       dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close()});
       dialog.addEventListener('close',()=>{document.documentElement.classList.remove('lightbox-open');source?.focus({preventScroll:true});preview.removeAttribute('src')});
     }
-    source=image;preview.src=image.currentSrc || image.src;preview.alt=image.alt;
+    source=image;
+    preview.src=image.parentElement?.matches('picture[data-milo-responsive]')?image.src:(image.currentSrc || image.src);
+    preview.alt=image.alt;
     caption.textContent=image.alt;caption.hidden=!image.alt;
     dialog.showModal();document.documentElement.classList.add('lightbox-open');
   }
