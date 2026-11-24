@@ -2,6 +2,7 @@
 (()=>{
   const article=document.getElementById('post-content');
   if(!article)return;
+  const messages=JSON.parse(document.body.dataset.miloMessages || '{}');
   const mobileTOC=document.querySelector('.mobile-toc');
   mobileTOC?.addEventListener('click',event=>{
     const link=event.target.closest('a[href^="#"]');
@@ -39,17 +40,17 @@
     if(block.tagName==='PRE' && block.closest('figure.highlight'))return;
     const wrapper=document.createElement('div'),toolbar=document.createElement('div'),button=document.createElement('button'),status=document.createElement('span');
     wrapper.className='code-block';toolbar.className='code-toolbar';
-    button.type='button';button.className='copy-code';button.textContent='复制代码';
+    button.type='button';button.className='copy-code';button.textContent=messages.copy;
     status.className='copy-status';status.setAttribute('role','status');
     block.before(wrapper);wrapper.append(toolbar,block);toolbar.append(status,button);
     const scroll=block;
-    scroll.tabIndex=0;scroll.setAttribute('aria-label','代码，可横向滚动');
+    scroll.tabIndex=0;scroll.setAttribute('aria-label',messages.codeScroll);
     let timer,copying=false;
     button.addEventListener('click',async()=>{
       if(copying)return;
       copying=true;button.setAttribute('aria-busy','true');clearTimeout(timer);
-      try{await copy(codeText(block));status.textContent='已复制'}
-      catch(e){status.textContent='复制失败，请手动选择代码'}
+      try{await copy(codeText(block));status.textContent=messages.copied}
+      catch(e){status.textContent=messages.copyError}
       finally{copying=false;button.removeAttribute('aria-busy');timer=setTimeout(()=>{status.textContent=''},2500)}
     });
   });
@@ -58,8 +59,8 @@
   let dialog,preview,caption,source;
   function open(image){
     if(!dialog){
-      dialog=document.createElement('dialog');dialog.className='image-lightbox';dialog.setAttribute('aria-label','图片预览');
-      const close=document.createElement('button');close.type='button';close.className='lightbox-close';close.textContent='关闭';close.setAttribute('aria-label','关闭图片预览');
+      dialog=document.createElement('dialog');dialog.className='image-lightbox';dialog.setAttribute('aria-label',messages.imagePreview);
+      const close=document.createElement('button');close.type='button';close.className='lightbox-close';close.textContent=messages.close;close.setAttribute('aria-label',messages.closeImage);
       preview=document.createElement('img');caption=document.createElement('p');
       dialog.append(close,preview,caption);document.body.append(dialog);
       close.addEventListener('click',()=>dialog.close());
@@ -78,7 +79,7 @@
     // 已有图片链接保留原目标和键盘行为。
     if(image.closest('a,button,picture[data-no-lightbox]') || image.hasAttribute('data-no-lightbox'))return;
     image.tabIndex=0;image.setAttribute('role','button');image.setAttribute('aria-haspopup','dialog');
-    image.setAttribute('aria-label','放大图片'+(image.alt?'：'+image.alt:''));
+    image.setAttribute('aria-label',messages.zoom+(image.alt?': '+image.alt:''));
     image.classList.add('lightbox-image');
     image.addEventListener('click',()=>open(image));
     image.addEventListener('keydown',event=>{if(event.key==='Enter' || event.key===' '){event.preventDefault();open(image)}});
